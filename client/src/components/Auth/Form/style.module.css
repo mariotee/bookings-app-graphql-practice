@@ -1,0 +1,41 @@
+.root {  
+  width: 60%;
+  margin: 4rem auto;  
+  font-size: 1.5rem;
+}
+
+header.header h3 {
+  text-align: center;
+}
+
+section.formcontrol {
+  padding: 0 2rem;
+}
+
+section.formcontrol label {
+  margin-right: 1rem;
+  color: #999;
+}
+
+section.formcontrol input {
+  width: 100%;  
+  margin: .5rem 0;
+  border: none;
+  border-bottom: 2px solid #999;
+  font: inherit;
+} 
+
+section.formcontrol input:focus {  
+  border-bottom: 2px solid #abcdef;
+}
+
+section.formactions {
+  display: flex;
+  justify-content: space-between;  
+  font-size: 1.25rem;
+  margin: 0.8rem 3rem;
+}
+
+section.formactions button {  
+  margin: 0.5rem;  
+}

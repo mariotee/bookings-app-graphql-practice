@@ -7,8 +7,8 @@ import EventsList from 'components/Events/EventsList'
 import Spinner from 'components/Spinner'
 
 import {apiQuery,apiAuthQuery} from 'api/gqlRequest'
-import * as EventsApi from 'api/events'
-import {GRAPHQL_ENDPOINT} from 'utils/constants'
+import * as EventsGql from 'api/graphqlQueries/events'
+import * as BookingsGql from 'api/graphqlQueries/bookings'
 
 class EventsView extends React.Component
 {
@@ -19,8 +19,8 @@ class EventsView extends React.Component
     this.state = {
       showModal: false,
       showDetailsModal: false,
-      data: [],
-      details: null,
+      events: [],
+      selectedEvent: null,
       loading: false,
     }
 
@@ -43,12 +43,11 @@ class EventsView extends React.Component
 
   fetchAllEvents = async () => {
     this.setState({loading: true,})
-    let res = await fetch(GRAPHQL_ENDPOINT, apiQuery(EventsApi.eventsQuery()))
-    let jsond = await res.json()
+    let res = (await apiQuery(EventsGql.eventsQuery())).data
     
     if (this.isActive) {
       this.setState({
-        data: jsond.data.events,
+        events: res.data.events,
         loading: false,
       })
     }
@@ -58,13 +57,13 @@ class EventsView extends React.Component
     this.setState({
       showModal: false,
       showDetailsModal: false,
-      details: null,
+      selectedEvent: null,
     })
   }
 
   openDetailsModal = (event) => {
     this.setState({
-      details: event,
+      selectedEvent: event,
       showDetailsModal: true,
     })
   }
@@ -82,51 +81,34 @@ class EventsView extends React.Component
     }    
     
     
-    let res = await fetch(GRAPHQL_ENDPOINT,
-      apiAuthQuery(EventsApi.createEventMutation(toCreate),
-      this.context.token),)
-      .catch((err) => console.log(err))
+    let res = (await apiAuthQuery(EventsGql.createEventMutation(toCreate),this.context.token)).data
+    .catch((err) => console.log(err))
 
     if (res.status !== 200 && res.status !== 201) {
       throw new Error("error in this request")
-    } else {
-      let jsond = await res.json()
-      if (!jsond.errors) {
-        this.setState((prevState) => {                    
-          let data = [...prevState.data]
-          data.push(jsond.data.createEvent)
+    } else {      
+      if (!res.errors) {
+        this.setState((prevState) => {
+          let data = [...prevState.events]
+          data.push(res.data.createEvent)
           
           return {
-            data
+            events: data
           }
         })
       } else {
-        console.log(jsond.errors)
+        console.log(res.errors)
         alert ("error with this request")
       }
     }    
   }
 
   bookEventHandler = async () => {
-    let res = await fetch("http://localhost:4000/graphql", {
-      method: "POST",
-      body: JSON.stringify({
-        query:`
-          mutation {
-            bookEvent(eventId: "${this.state.details.eventId}") {
-              createdAt
-              updatedAt
-            }
-          }
-        `
-      }),
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.context.token
-      },
+    let res = await apiAuthQuery(BookingsGql.bookEventMutation(this.state.selectedEvent.eventId),this.context.token)
+    .catch((err) => {
+      console.log(err.response.data.errors)
     })
-
-    let jsond = await res.json()
+    let jsond = res.data
     if (!jsond.errors) {
       alert("successfully booked!")
     } else {
@@ -147,7 +129,7 @@ class EventsView extends React.Component
   }
 
   render() {
-    const dateDetails = this.state.details && this.formatAMPM(new Date(this.state.details.date))
+    const dateDetails = this.state.selectedEvent && this.formatAMPM(new Date(this.state.selectedEvent.date))
     return <div>
     {
       this.context.token && <section>
@@ -177,16 +159,16 @@ class EventsView extends React.Component
       this.state.loading
         ? <Spinner/>
         : <EventsList 
-        data={this.state.data} 
-        currentUserId={this.context.userId}
-        onDetails={this.openDetailsModal}
-      />
+          data={this.state.events} 
+          currentUserId={this.context.userId}
+          onDetails={this.openDetailsModal}
+        />
     }
     {
       this.state.showDetailsModal && <section>
         <Backdrop/>
         <Modal
-          title={`Details For "${this.state.details.title}" ${dateDetails}`}
+          title={`Details For "${this.state.selectedEvent.title}" ${dateDetails}`}
           onClose={this.closeModal}
           onCancel={this.context.token && this.closeModal}
           onConfirm={this.context.token && this.bookEventHandler}
@@ -194,9 +176,9 @@ class EventsView extends React.Component
           confirmText="Book This Event"
         >
           <div>
-            Price: ${this.state.details.price} <br/>
-            Description: {this.state.details.description} <br/>
-            Created By: {this.state.details.creator.email}
+            Price: ${this.state.selectedEvent.price} <br/>
+            Description: {this.state.selectedEvent.description} <br/>
+            Created By: {this.state.selectedEvent.creator.email}
           </div>
         </Modal>
       </section>

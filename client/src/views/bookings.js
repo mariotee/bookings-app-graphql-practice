@@ -1,10 +1,11 @@
 import React from 'react'
 import AuthContext from 'utils/context/auth'
-import Spinner from 'components/Spinner'
 
-import {GRAPHQL_ENDPOINT} from 'utils/constants'
 import { apiAuthQuery } from 'api/gqlRequest';
-import * as BookingsApi from 'api/bookings'
+import * as BookingsGql from 'api/graphqlQueries/bookings'
+
+import Spinner from 'components/Spinner'
+import BookingsList from 'components/Bookings/BookingsList'
 
 class BookingsView extends React.Component
 {
@@ -27,14 +28,12 @@ class BookingsView extends React.Component
       loading: true,
     })
 
-    let res = await fetch(GRAPHQL_ENDPOINT, 
-      apiAuthQuery(BookingsApi.bookingsQuery(),this.context.token)
-    )
-    .catch((err) => {
-      console.log(err)
+    let res = await apiAuthQuery(BookingsGql.bookingsQuery(),this.context.token)
+    .catch((err) => {      
+      console.log(err.response.data)
     })
-
-    let jsond = await res.json()
+    
+    let jsond = res.data
 
     if (jsond.errors) {      
       alert('request failed!')
@@ -46,23 +45,31 @@ class BookingsView extends React.Component
     }
   }
 
+  cancelBooking = async (bookingId) => {
+    let res = await apiAuthQuery(BookingsGql.cancelBookingMutation(bookingId), this.context.token)
+    .catch((err) => {
+      console.log(err.response.data)
+    })
+    let jsond = res.data
+
+    if (jsond.errors) {
+      alert('failed to delete')
+    } else {
+      this.setState((prevState) => {        
+        return {
+          bookings: prevState.bookings.filter(x => x.bookingId !== bookingId)
+        }
+      })
+    }
+  }
+
   render() {
     return <div>
       <h1>The Bookings Page</h1>
       {
         this.state.loading
           ? <Spinner/>
-          : <ul>
-          {
-            this.state.bookings.map((element) => <li key={element.bookingId}>
-              <div>
-                <p>Event: "{element.event.title}" on {new Date(element.event.date).toLocaleDateString()}</p>
-                <p>Created By: {element.event.creator.email}</p>
-                <p>Booked By: {element.user.email}</p>
-              </div>
-            </li>)
-          }
-          </ul>
+          : <BookingsList data={this.state.bookings} onDelete={this.cancelBooking}/>
       }
     </div>
   }

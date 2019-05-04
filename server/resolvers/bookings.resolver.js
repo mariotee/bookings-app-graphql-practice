@@ -6,7 +6,9 @@ module.exports = {
       throw "not auth!"
     }
     let stuff = await BookingModel
-      .find()
+      .find({
+        user: req.userId
+      })
       .populate({path: "user", model: "User"})
       .populate({
         path: "event", model: "Event",
@@ -80,8 +82,8 @@ module.exports = {
     if (!req.isAuth) {
       throw "not auth!"
     }
-
-    try {                    
+    console.log(args.bookingId)
+    try {
       let deleted = await BookingModel.findByIdAndDelete(args.bookingId)
       
       deleted = await deleted

@@ -1,18 +1,13 @@
-export const apiQuery = (options) => ({
-  method: "POST",
-  body: JSON.stringify({
-    query: options
-  }),
+import axios from 'axios'
+import {GRAPHQL_ENDPOINT} from 'utils/constants'
+
+export const apiQuery = (options) => axios.post(GRAPHQL_ENDPOINT,{query: options},{
   headers: {
     "Content-Type": "application/json",    
   },
 })
 
-export const apiAuthQuery = (options, token) => ({
-  method: "POST",
-  body: JSON.stringify({
-    query: options
-  }),
+export const apiAuthQuery = (options, token) => axios.post(GRAPHQL_ENDPOINT,{query: options},{
   headers: {
     "Content-Type": "application/json",
     "Authorization": "Bearer " + token,

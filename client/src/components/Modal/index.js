@@ -1,10 +1,15 @@
 import React from 'react'
 import styles from './style.module.css'
 
-export default (props) => <div className={styles.root}>  
+export default (props) => <div className={styles.root}>
   <header className={styles.header}>
-    {props.title}
-    <span className={styles.closeit} onClick={props.onClose}>X</span>
+    <div className={styles.title}>
+      {props.title}
+      <span className={styles.closeit} onClick={props.onClose}>X</span>    
+    </div>
+    {
+      props.subtitle && <div className={styles.subtitle}>{props.subtitle}</div>
+    }
   </header>
   <section>
     {props.children}

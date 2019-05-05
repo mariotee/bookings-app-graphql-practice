@@ -12,7 +12,7 @@ export default (props) => {
     <input type="time" ref={props.refs.time}/>
     <br/>
     <label>Price</label>
-    <input type="number" ref={props.refs.price}/>
+    <input type="number" step="0.01" ref={props.refs.price}/>
     <br/>
     <label>Description</label><br/>
     <textarea rows="5" ref={props.refs.description}/>

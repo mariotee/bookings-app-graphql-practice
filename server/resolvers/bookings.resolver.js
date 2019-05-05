@@ -82,7 +82,7 @@ module.exports = {
     if (!req.isAuth) {
       throw "not auth!"
     }
-    console.log(args.bookingId)
+    
     try {
       let deleted = await BookingModel.findByIdAndDelete(args.bookingId)
       

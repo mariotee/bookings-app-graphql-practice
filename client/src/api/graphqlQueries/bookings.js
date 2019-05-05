@@ -1,36 +1,68 @@
-export const bookingsQuery = () => `
-query {
-  bookings {
-    bookingId
-    createdAt
-    event {
-      title
-      date            
-      creator {
+import axios from 'axios'
+import {GRAPHQL_ENDPOINT} from 'utils/constants'
+
+export const bookingsQuery = (token) => axios.post(GRAPHQL_ENDPOINT, {
+  query: `
+  query {
+    bookings {
+      bookingId
+      createdAt
+      event {
+        title
+        date            
+        creator {
+          email
+        }
+      }
+      user {
         email
       }
     }
-    user {
-      email
+  }
+  `
+}, 
+{
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token,
+  }
+})
+
+export const bookEventMutation = (eventId, token) => axios.post(GRAPHQL_ENDPOINT,{
+  query: `mutation ($id: ID!) {
+    bookEvent(eventId: $id) {
+      createdAt
+      updatedAt
     }
   }
-}
-`
-
-export const bookEventMutation = (eventId) => `
-mutation {
-  bookEvent(eventId: "${eventId}") {
-    createdAt
-    updatedAt
+  `,
+  variables: {
+    id: eventId,
   }
-}
-`
+},
+{
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token,
+  },
+})
 
-export const cancelBookingMutation = (bookingId) => `
-mutation {
-  cancelBooking(bookingId: "${bookingId}") {
-    bookingId
-    createdAt
+export const cancelBookingMutation = (bookingId, token) => axios.post(GRAPHQL_ENDPOINT, {
+  query: `
+  mutation ($id: ID!) {
+    cancelBooking(bookingId: $id) {
+      bookingId
+      createdAt
+    }
   }
-}
-`
+  `,
+  variables: {
+    id: bookingId,
+  }
+},
+{
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token,
+  }
+})

@@ -1,12 +1,22 @@
 const EventModel = require("../models/Event.model")
 
+//TODO: look into how to actually use these?
+//const DataLoader = require('dataloader')
+
+// const eventLoader = new DataLoader((eventIds) => {
+//   return someFunction(eventIds)
+// })
+
+// called with eventLoader.load or .loadMany
+
 module.exports = {
   events: async () => {
     let stuff = await EventModel.find().populate({
       path: "creator",
       model: "User"
     })
-    
+
+    console.log("returning all events retrieved")
     return stuff.map((element) => {
       return {
         eventId: element._id,
@@ -39,6 +49,7 @@ module.exports = {
       model: "User"      
     }).execPopulate()
 
+    console.log("returning created event for user with id: " + req.userId)
     return {
       eventId: created._id,
         title: created.title,

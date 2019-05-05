@@ -1,7 +1,6 @@
 import React from 'react'
 import AuthContext from 'utils/context/auth'
 
-import { apiAuthQuery } from 'api/gqlRequest';
 import * as BookingsGql from 'api/graphqlQueries/bookings'
 
 import Spinner from 'components/Spinner'
@@ -28,7 +27,7 @@ class BookingsView extends React.Component
       loading: true,
     })
 
-    let res = await apiAuthQuery(BookingsGql.bookingsQuery(),this.context.token)
+    let res = await BookingsGql.bookingsQuery(this.context.token)
     .catch((err) => {      
       console.log(err.response.data)
     })
@@ -46,7 +45,7 @@ class BookingsView extends React.Component
   }
 
   cancelBooking = async (bookingId) => {
-    let res = await apiAuthQuery(BookingsGql.cancelBookingMutation(bookingId), this.context.token)
+    let res = await BookingsGql.cancelBookingMutation(bookingId, this.context.token)
     .catch((err) => {
       console.log(err.response.data)
     })

@@ -7,7 +7,6 @@ import EventsList from 'components/Events/EventsList'
 import CreateEventModal from 'components/Events/CreateEventModal'
 import EventDetailsModal from 'components/Events/DetailsModal'
 
-import {apiQuery,apiAuthQuery} from 'api/gqlRequest'
 import * as EventsGql from 'api/graphqlQueries/events'
 import * as BookingsGql from 'api/graphqlQueries/bookings'
 
@@ -45,7 +44,7 @@ class EventsView extends React.Component
 
   fetchAllEvents = async () => {
     this.setState({loading: true,})
-    let res = (await apiQuery(EventsGql.eventsQuery())).data
+    let res = (await EventsGql.eventsQuery()).data
     
     if (this.isActive) {
       this.setState({
@@ -79,34 +78,36 @@ class EventsView extends React.Component
   confirmCreateEvent = async () => {
     this.setState({
       showCreateEventModal: false,
-    })
-    
-    const toCreate = {
-      title: this.eventRefs.title.current.value,
-      price: this.eventRefs.price.current.value,
-      date: new Date(this.eventRefs.date.current.value + " " + this.eventRefs.time.current.value).toISOString(),
-      description: this.eventRefs.description.current.value,
-    }
-    
-    let res = (await apiAuthQuery(EventsGql.createEventMutation(toCreate),this.context.token)).data    
-    
-    if (!res.errors) {
-      this.setState((prevState) => {
-        let data = [...prevState.events]
-        data.push(res.data.createEvent)
-        
-        return {
-          events: data
-        }
-      })
-    } else {
-      console.log(res.errors)
-      alert ("error with this request")
-    }
+    })    
+    let res
+    try {
+      res = (await EventsGql.createEventMutation({
+        title: this.eventRefs.title.current.value,
+        price: this.eventRefs.price.current.value,
+        date: new Date(this.eventRefs.date.current.value + " " + this.eventRefs.time.current.value).toISOString(),
+        description: this.eventRefs.description.current.value,
+      }, this.context.token)).data
+
+      if (!res.errors) {
+        this.setState((prevState) => {
+          let data = [...prevState.events]
+          data.push(res.data.createEvent)
+          
+          return {
+            events: data
+          }
+        })
+      } else {
+        console.log(res.errors)
+        alert ("error with this request")
+      }
+    } catch (err) {
+      alert('network failure')
+    }                
   }
 
   bookEventHandler = async () => {
-    let res = (await apiAuthQuery(BookingsGql.bookEventMutation(this.state.selectedEvent.eventId),this.context.token)).data
+    let res = (await BookingsGql.bookEventMutation(this.state.selectedEvent.eventId,this.context.token)).data
     
     if (!res.errors) {
       alert("successfully booked!")
@@ -141,8 +142,8 @@ class EventsView extends React.Component
       this.state.showDetailsModal && <EventDetailsModal
         event={this.state.selectedEvent}
         onClose={this.closeModal}
-        onCancel={this.closeModal}
-        onConfirm={this.bookEventHandler}
+        onCancel={this.context.token && this.closeModal}
+        onConfirm={this.context.token && this.bookEventHandler}
       />
     }
     </main>

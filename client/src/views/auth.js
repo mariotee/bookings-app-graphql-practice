@@ -2,7 +2,6 @@ import React from 'react'
 import AuthContext from "utils/context/auth"
 
 import AuthForm from "components/Auth/Form"
-import {apiQuery} from 'api/gqlRequest'
 import * as AuthGql from 'api/graphqlQueries/auth'
 
 class AuthPage extends React.Component
@@ -35,7 +34,7 @@ class AuthPage extends React.Component
   }
 
   createUser = async (email,password) => {
-    let response = await apiQuery(AuthGql.createUserMutation({email,password}))    
+    let response = await AuthGql.createUserMutation({email,password})
     .catch((err) => {
       console.log(err)
       alert("request failed")
@@ -57,7 +56,7 @@ class AuthPage extends React.Component
   }
 
   loginUser = async (email,password) => {
-    let response = await apiQuery(AuthGql.loginQuery({email,password}))
+    let response = await AuthGql.loginQuery({email,password})
     .catch((err) => {
       console.log(err)
       alert("request failed")

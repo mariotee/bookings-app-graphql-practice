@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")
 
-const TOKEN_EXPIRE_HOURS = 1
+const TOKEN_EXPIRE_HOURS = 4 
 
 const UserModel = require("../models/User.model")
 

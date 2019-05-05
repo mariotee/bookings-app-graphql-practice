@@ -3,10 +3,10 @@ h3.header {
 }
 
 .list {
-  margin: 0 0 0 0.5rem;
+  margin: 0 0.5rem;
   padding: 0;  
-  width: 80%; 
-  max-width: 920px; 
+  width: 95%; 
+  max-width: 920px;
 }
 
 .list li {  

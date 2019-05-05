@@ -14,7 +14,8 @@ module.exports = {
         path: "event", model: "Event",
         populate: {path: "creator", model: "User"}
       })
-    
+
+    console.log("returning all bookings for user with id: " + req.userId)
     return stuff.map((booking) => {
       return {
         bookingId: booking._id,
@@ -57,6 +58,7 @@ module.exports = {
         model: "Event",
       }).execPopulate()
     
+    console.log("returning booking for user with id: " + req.userId)
     return {
       bookingId: booking._id,
       event: {
@@ -95,6 +97,7 @@ module.exports = {
         model: "Event",
       }).execPopulate()
       
+      console.log("returning cancelled booking for user with id: " + req.userId)
       return {
         bookingId: deleted._id,
         event: {

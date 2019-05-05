@@ -1,4 +1,4 @@
-.root {  
+.root {
   width: 80%;
   max-width: 540px;
   background: white;
@@ -11,9 +11,14 @@
   transform: translate(-50%, -50%);
 }
 
-header.header {
+.title {
   display: flex;
   justify-content: space-between;
+  font-weight: 700;
+}
+
+.subtitle {
+  font-size: 0.85rem;  
 }
 
 .closeit {

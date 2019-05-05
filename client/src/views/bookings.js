@@ -65,7 +65,7 @@ class BookingsView extends React.Component
 
   render() {
     return <div>
-      <h1>The Bookings Page</h1>
+      <h1>Your Bookings</h1>
       {
         this.state.loading
           ? <Spinner/>

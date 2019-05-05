@@ -2,6 +2,7 @@ export const bookingsQuery = () => `
 query {
   bookings {
     bookingId
+    createdAt
     event {
       title
       date            

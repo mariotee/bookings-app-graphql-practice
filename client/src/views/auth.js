@@ -8,6 +8,7 @@ class AuthPage extends React.Component
 {  
   constructor(props) {
     super(props)
+    console.log(process.env.REACT_APP_SERVER_HOST)
     this.emailRef = React.createRef()
     this.passwordRef = React.createRef()
     this.state = {

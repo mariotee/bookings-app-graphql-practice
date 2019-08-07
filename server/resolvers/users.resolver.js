@@ -6,10 +6,10 @@ const TOKEN_EXPIRE_HOURS = 4
 const UserModel = require("../models/User.model")
 
 module.exports = {
-  login: async ({ email, password }) => {
-    const existing = await UserModel.findOne({ email })
+  login: async ({ email, password }) => {    
+    const existing = await UserModel.findOne({ email })    
 
-    if (!existing) {
+    if (!existing) {      
       throw "user does not exist"
     }
 

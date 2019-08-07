@@ -1,0 +1,9 @@
+//REMOVE THIS LINE AND .txt EXTENSION
+{
+    "env": {
+        "PORT": "<exposed port>",
+        "CLIENT_HOST": "<client's exposed host>",
+        "MONGO_DB_CONNECTION_STRING": "<connection string>",
+        "TOKEN_KEY": "<any string really, but best to use RSA key>"
+    }
+}

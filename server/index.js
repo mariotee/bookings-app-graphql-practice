@@ -30,8 +30,9 @@ mongoose.connect(process.env.MONGO_DB_CONNECTION_STRING, {
   useNewUrlParser: true,
   useCreateIndex: true,
 })
-.then(app.listen(4000, () => {
-  console.log("listening on port 4000")
+.then(app.listen(process.env.PORT, () => {
+  console.log(`listening on port ${process.env.PORT}`)
+  console.log('cors on ',process.env.CLIENT_HOST)
 }))
 .catch(err => {
   console.log(err)

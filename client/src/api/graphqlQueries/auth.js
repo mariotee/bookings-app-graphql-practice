@@ -2,7 +2,6 @@ import axios from 'axios'
 import {GRAPHQL_ENDPOINT} from 'utils/constants'
 
   export const loginQuery = (data) => {
-    console.log(GRAPHQL_ENDPOINT)
     return axios.post(GRAPHQL_ENDPOINT,{
       query: `query ($email: String!, $password: String!) {
         login(email: $email, password: $password) {

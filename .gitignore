@@ -5,6 +5,7 @@ node_modules
 
 nodemon.json
 Dockerfile
+build.script
 
 # testing
 /coverage

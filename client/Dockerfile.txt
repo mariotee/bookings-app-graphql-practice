@@ -3,5 +3,6 @@ WORKDIR /app
 COPY ./package.json /app
 RUN npm install
 COPY . /app
-CMD npm start
+CMD npm run build
+CMD npx serve -l <PORT from .env> -s build
 EXPOSE <PORT from .env>

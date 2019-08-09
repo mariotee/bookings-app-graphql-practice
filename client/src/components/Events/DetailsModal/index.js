@@ -34,7 +34,7 @@ export default (props) => {
         <p className={styles.price}>Price: ${props.event.price}</p>
         <div className={styles.body}>
           <p className={styles.label}>Description</p>
-          <textarea readOnly rows={5} value={props.event.description/>
+          <textarea readOnly rows={5} value={props.event.description}/>
           <p className={styles.createdby}>Created By: {props.event.creator.email}</p>
         </div>        
       </div>      

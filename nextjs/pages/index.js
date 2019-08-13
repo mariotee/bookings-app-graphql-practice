@@ -13,8 +13,7 @@ class AuthPage extends React.Component
     this.passwordRef = React.createRef()
     this.state = {
       isLogin: true,
-    }
-    console.log(process.env)
+    }    
   }
 
   static contextType = AuthContext

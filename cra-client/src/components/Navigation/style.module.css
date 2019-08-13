@@ -1,0 +1,44 @@
+.root {  
+  display: flex;
+  align-items: center;    
+}
+
+.navwrapper {  
+  width: 100%;  
+  background-color: #f0f0f0;  
+  padding: 0.275rem;  /*look into this!*/
+}
+
+.navlist {
+  display: flex;
+  list-style: none;     
+}
+
+.navlist li {
+  margin-right: 1rem;     
+}
+
+.navlist a {  
+  text-decoration: none;
+  color: black;
+}
+
+.navlist a:hover {
+  color: #abcdef;
+}
+
+button.logout {      
+  border: none;
+  font: inherit;
+  color: grey;  
+}
+
+button.logout:hover {
+ color: #abcdef;
+ cursor: pointer;
+}
+
+.logo {
+  background-color: #99ccff;
+  padding: 0 1rem;
+}

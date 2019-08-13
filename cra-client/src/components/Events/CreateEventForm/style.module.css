@@ -1,0 +1,12 @@
+.form label {
+  margin-right: .5rem;
+}
+
+.form input {
+  margin: 0.5rem 1.5rem 0.5rem 0;
+}
+
+.form textarea {
+  margin: 0.5rem 0;
+  width: 100%;
+}

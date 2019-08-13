@@ -3,6 +3,5 @@ WORKDIR /app
 COPY ./package.json /app
 RUN npm install
 COPY . /app
-RUN npm run build
-CMD npx serve -l <PORT from .env> -s build
-EXPOSE <PORT from .env>
+CMD npm run build && npx serve -l 5000 -s build
+EXPOSE 5000

@@ -4,7 +4,7 @@ docker stop web
 docker stop srv
 docker rm srv
 docker rm web
-docker build -t <NAMESPACE>/srv ./server
-docker run -d --name srv -p <STATIC_IP>:<PORT>:<PORT from server/nodemon.json> <NAMESPACE>/srv
-docker build -t <NAMESPACE>/web ./client
-docker run -d --name web -p <STATIC_IP>:<OTHER_PORT>:<PORT from client/.env(.local)?> <NAMESPACE>/web
+docker build -t namespace/srv ./server
+docker run -d --name srv -p internal_ip:9000:4000 namespace/srv
+docker build -t namespace/web ./client
+docker run -d --name web -p internal_ip:5000:5000 namespace/web

@@ -1,8 +1,0 @@
-FROM node:10
-WORKDIR /app
-COPY ./package.json /app
-RUN npm install
-COPY . /app
-RUN npm run build
-CMD npx serve -l <PORT from .env> -s .next
-EXPOSE <PORT from .env>

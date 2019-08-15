@@ -1,0 +1,15 @@
+version: "3.3"
+services:
+  client:
+    build: ./cra-client
+    ports:
+    - "5000:5000"
+    environment:
+    - REACT_APP_SERVER_HOST
+  api:
+    build: ./server
+    ports:
+    - "9000:4000"
+    environment:
+    - CLIENT_HOST
+  

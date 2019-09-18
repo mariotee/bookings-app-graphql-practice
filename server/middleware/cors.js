@@ -1,5 +1,5 @@
 module.exports = (req,res,next) => {  
-  res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_HOST)
+  res.setHeader("Access-Control-Allow-Origin", process.env.CLIENT_HOST || "")
   res.setHeader("Access-Control-Allow-Methods", "POST,GET,OPTIONS")
   res.setHeader("Access-Control-Allow-Headers", "Content-Type,Authorization")
 

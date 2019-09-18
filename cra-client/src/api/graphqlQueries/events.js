@@ -52,3 +52,29 @@ export const createEventMutation = (event,token) => axios.post(GRAPHQL_ENDPOINT,
     "Authorization": "Bearer " + token,
   }
 })
+
+export const deleteEventMutation = (event,token) => axios.post(GRAPHQL_ENDPOINT, {
+  query: `mutation ($id: ID!) {
+    deleteEvent(id: $id) {
+      eventId
+      title
+      description
+      date
+      price
+      creator {
+        userId
+        email      
+      }
+    }
+  }
+  `,
+  variables: {
+    id: event.id
+  }
+},
+{
+  headers: {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + token,
+  }
+})

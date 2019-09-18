@@ -58,7 +58,7 @@ module.exports = {
   deleteEvent: async (args, req) => {
     if (!req[Constants.AUTH_KEY]) {
       throw "no auth!"      
-    }
+    }    
 
     let deleted = await EventModel.findByIdAndDelete(args.id)
     .catch(err => console.log(err))
@@ -67,7 +67,7 @@ module.exports = {
       model: "User"      
     }).execPopulate()
 
-    console.log("returning created event for user with id: " + req[Constants.USER_ID])
+    console.log("returning deleted event for user with id: " + req[Constants.USER_ID])
     return {
       eventId: deleted._id,
         title: deleted.title,

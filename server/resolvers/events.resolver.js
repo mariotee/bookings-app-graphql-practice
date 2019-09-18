@@ -1,13 +1,6 @@
 const EventModel = require("../models/Event.model")
 
-//TODO: look into how to actually use these?
-//const DataLoader = require('dataloader')
-
-// const eventLoader = new DataLoader((eventIds) => {
-//   return someFunction(eventIds)
-// })
-
-// called with eventLoader.load or .loadMany
+const Constants = require("../constants.js")
 
 module.exports = {
   events: async () => {
@@ -32,8 +25,8 @@ module.exports = {
     })
   },
   createEvent: async (args, req) => {
-    if (!req.isAuth) {
-      throw "no auth!"
+    if (!req[Constants.AUTH_KEY]) {
+      throw "no auth!"      
     }
 
     let created = await EventModel.create({
@@ -41,7 +34,7 @@ module.exports = {
       description: args.eventInput.description,
       price: Number(args.eventInput.price),
       date: args.eventInput.date,
-      creator: req.userId,
+      creator: req[Constants.USER_ID],
     })
     .catch(err => console.log(err))
     created = await created.populate({
@@ -49,7 +42,7 @@ module.exports = {
       model: "User"      
     }).execPopulate()
 
-    console.log("returning created event for user with id: " + req.userId)
+    console.log("returning created event for user with id: " + req[Constants.USER_ID])
     return {
       eventId: created._id,
         title: created.title,
@@ -62,4 +55,29 @@ module.exports = {
         }
     }
   },
+  deleteEvent: async (args, req) => {
+    if (!req[Constants.AUTH_KEY]) {
+      throw "no auth!"      
+    }
+
+    let deleted = await EventModel.findByIdAndDelete(args.id)
+    .catch(err => console.log(err))
+    deleted = await deleted.populate({
+      path: "creator",
+      model: "User"      
+    }).execPopulate()
+
+    console.log("returning created event for user with id: " + req[Constants.USER_ID])
+    return {
+      eventId: deleted._id,
+        title: deleted.title,
+        description: deleted.description,
+        price: deleted.price,
+        date: new Date(deleted.date).toISOString(),
+        creator: {
+          userId: deleted.creator._id,
+          email: deleted.creator.email,
+        }
+    }
+  }
 }

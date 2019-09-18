@@ -1,15 +1,17 @@
 const jwt = require("jsonwebtoken")
 
+const Constants = require("../constants.js")
+
 module.exports = (req,res,next) => {
   const authHeader = req.get("Authorization")
   if (!authHeader) {
-    req.isAuth = false
+    req[Constants.AUTH_KEY] = false
     return next()
   }
 
   const token = authHeader.split(" ")[1] //look like Bearer <token>
   if (!token || token === "") {
-    req.isAuth = false
+    req[Constants.AUTH_KEY] = false
     return next()
   }
   
@@ -19,17 +21,17 @@ module.exports = (req,res,next) => {
     decodedToken = jwt.verify(token, process.env.TOKEN_KEY)
   } catch (err) {
     console.log(err)
-    req.isAuth = false
+    req[Constants.AUTH_KEY] = false
     return next()
   }
 
   if (!decodedToken) {
-    req.isAuth = false
+    req[Constants.AUTH_KEY] = false
     return next()
   }
 
-  req.isAuth = true
-  req.userId = decodedToken.userId
-  req.userEmail = decodedToken.email
+  req[Constants.AUTH_KEY] = true
+  req[Constants.USER_ID] = decodedToken.userId
+  req[Constants.USER_EMAIL] = decodedToken.email
   next()
 }

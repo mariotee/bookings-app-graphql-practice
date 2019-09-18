@@ -1,13 +1,15 @@
 const BookingModel = require("../models/Booking.model")
 
+const Constants = require("../constants.js")
+
 module.exports = {
   bookings: async (_, req) => {
-    if (!req.isAuth) {
+    if (!req[Constants.AUTH_KEY]) {
       throw "not auth!"
     }
     let stuff = await BookingModel
       .find({
-        user: req.userId
+        user: req[Constants.USER_ID]
       })
       .populate({path: "user", model: "User"})
       .populate({
@@ -15,7 +17,7 @@ module.exports = {
         populate: {path: "creator", model: "User"}
       })
 
-    console.log("returning all bookings for user with id: " + req.userId)
+    console.log("returning all bookings for user with id: " + req[Constants.USER_ID])
     return stuff.map((booking) => {
       return {
         bookingId: booking._id,
@@ -40,12 +42,12 @@ module.exports = {
     })
   },
   bookEvent: async (args, req) => {
-    if (!req.isAuth) {
+    if (!req[Constants.AUTH_KEY]) {
       throw "not auth!"
     }
     
     let booking = await BookingModel.create({
-      user: req.userId,
+      user: req[Constants.USER_ID],
       event: args.eventId,
     })
     
@@ -58,7 +60,7 @@ module.exports = {
         model: "Event",
       }).execPopulate()
     
-    console.log("returning booking for user with id: " + req.userId)
+    console.log("returning booking for user with id: " + req[Constants.USER_ID])
     return {
       bookingId: booking._id,
       event: {
@@ -81,7 +83,7 @@ module.exports = {
     }
   },
   cancelBooking: async (args,req) => {
-    if (!req.isAuth) {
+    if (!req[Constants.AUTH_KEY]) {
       throw "not auth!"
     }
     
@@ -97,7 +99,7 @@ module.exports = {
         model: "Event",
       }).execPopulate()
       
-      console.log("returning cancelled booking for user with id: " + req.userId)
+      console.log("returning cancelled booking for user with id: " + req[Constants.USER_ID])
       return {
         bookingId: deleted._id,
         event: {

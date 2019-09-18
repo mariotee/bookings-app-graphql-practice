@@ -106,6 +106,28 @@ class EventsView extends React.Component
     }                
   }
 
+  confirmDeleteEvent = async (id) => {      
+    let res
+    try {
+      res = (await EventsGql.deleteEventMutation({id}, this.context.token)).data
+
+      if (!res.errors) {
+        this.setState((prevState) => {
+          let data = [...prevState.events].filter((element) => element._id !== id)          
+          
+          return {
+            events: data
+          }
+        })
+      } else {
+        console.log(res.errors)
+        alert ("error with this request")
+      }
+    } catch (err) {
+      alert('network failure')
+    }                
+  }
+
   bookEventHandler = async () => {
     let res = (await BookingsGql.bookEventMutation(this.state.selectedEvent.eventId,this.context.token)).data
     
@@ -136,6 +158,7 @@ class EventsView extends React.Component
           data={this.state.events} 
           currentUserId={this.context.userId}
           onDetails={this.openDetailsModal}
+          onConfirmDelete={this.confirmDeleteEvent}          
         />
     }
     {

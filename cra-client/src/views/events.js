@@ -113,7 +113,7 @@ class EventsView extends React.Component
 
       if (!res.errors) {
         this.setState((prevState) => {
-          let data = [...prevState.events].filter((element) => element._id !== id)          
+          let data = [...prevState.events].filter((element) => element.eventId !== id)          
           
           return {
             events: data

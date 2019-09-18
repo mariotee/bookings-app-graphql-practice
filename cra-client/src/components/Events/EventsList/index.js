@@ -17,7 +17,16 @@ export default (props) => {
           {
             props.currentUserId === element.creator.userId
               ? <p>You created this event</p>
-              : <button className="g-btn" onClick={() => props.onDetails(element)}>View Details</button>
+              : <button className="g-btn" onClick={() => props.onDetails(element)}>View Details</button>              
+          }
+          {
+            props.currentUserId === element.creator.userId && <button className="g-btn" onClick={() => {
+              if (window.confirm('Are you sure you want to delete this Event? Others might have it booked!')) {
+                props.onConfirmDelete(element.eventId)
+              }
+            }}>
+              Delete This Event
+            </button>              
           }
           </div>
         </li>
